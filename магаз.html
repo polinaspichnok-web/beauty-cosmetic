@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Beauty&Cosmetic — косметика</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #fef5f8 0%, #fce4ec 100%);
+            color: #2c1a2e;
+        }
+        header {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            box-shadow: 0 6px 20px rgba(156, 39, 176, 0.1);
+        }
+        .header-top {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0.8rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #9c27b0;
+            cursor: pointer;
+        }
+        .search-box {
+            flex: 1;
+            max-width: 300px;
+            background: #fce4ec;
+            border-radius: 60px;
+            padding: 5px 15px;
+            display: flex;
+            align-items: center;
+        }
+        .search-box input { flex: 1; border: none; background: transparent; padding: 6px 0; outline: none; }
+        .search-box button { background: none; border: none; color: #9c27b0; cursor: pointer; }
+        .nav-icons { display: flex; gap: 1rem; align-items: center; }
+        .nav-icons a { color: #4a154b; font-size: 1.3rem; position: relative; text-decoration: none; }
+        .badge {
+            position: absolute; top: -10px; right: -14px;
+            background: #e91e63; color: white; font-size: 0.65rem;
+            border-radius: 50%;
+            width: 18px; height: 18px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .bottom-menu {
+            background: #fff0f5;
+            padding: 0.5rem 2rem;
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            border-top: 1px solid #f8d0e0;
+        }
+        .bottom-menu span, .dropbtn {
+            font-weight: 600;
+            color: #6d3b6e;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+        }
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: white;
+            min-width: 180px;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 0.5rem 0;
+            z-index: 150;
+        }
+        .dropdown:hover .dropdown-content { display: block; }
+        .dropdown-content div {
+            padding: 8px 20px;
+            color: #4a154b;
+            cursor: pointer;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; }
+        .hero {
+            background: linear-gradient(120deg, #f8bbd0, #e1bee7);
+            border-radius: 40px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .hero h1 { font-size: 1.5rem; }
+        .section-title { font-size: 1.5rem; margin: 1rem 0 1rem; color: #9c27b0; font-weight: 600; }
+        
+        /* КАРТОЧКИ ТОВАРОВ */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        .product-card {
+            background: white;
+            border-radius: 24px;
+            padding: 1.2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transition: all 0.25s ease;
+            cursor: pointer;
+            text-align: center;
+        }
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 32px rgba(0,0,0,0.12);
+        }
+        .product-img {
+            width: 100%;
+            height: 180px;
+            object-fit: contain;
+            margin-bottom: 1rem;
+            background: #ffffff;
+            border-radius: 16px;
+        }
+        .product-card strong {
+            font-size: 1.1rem;
+            display: block;
+            margin: 0.5rem 0;
+        }
+        .price-block {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            color: #9c27b0;
+        }
+        .old-price {
+            text-decoration: line-through;
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-left: 6px;
+        }
+        button.small-btn {
+            background: #9c27b0;
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-block;
+            width: auto;
+        }
+        button.small-btn:hover {
+            background: #e91e63;
+        }
+        
+        /* МОДАЛЬНОЕ ОКНО */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 32px;
+            max-width: 950px;
+            width: 90%;
+            padding: 1.8rem;
+            position: relative;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .close-modal {
+            position: absolute;
+            top: 16px;
+            right: 24px;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #aaa;
+            transition: 0.2s;
+        }
+        .close-modal:hover { color: #000; }
+        .modal-inner {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        .modal-image {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+        }
+        .modal-image img {
+            width: 100%;
+            max-width: 320px;
+            border-radius: 20px;
+            object-fit: contain;
+        }
+        .modal-details {
+            flex: 2;
+        }
+        .modal-details h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 0.3rem;
+        }
+        .brand {
+            color: #9c27b0;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+        .rating {
+            color: #fbbf24;
+            margin-bottom: 0.8rem;
+        }
+        .price-large {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+        .specs-block {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 20px;
+            margin: 1rem 0;
+        }
+        .btn-primary {
+            background: #9c27b0;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .timer {
+            background: #e91e63;
+            color: white;
+            padding: 8px;
+            border-radius: 50px;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .order-grid { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+        .order-details { flex: 2; }
+        .order-summary { flex: 1; background: #f9f0f5; border-radius: 28px; padding: 1rem; }
+        .radio-group { margin: 1rem 0; background: #fff; border-radius: 28px; padding: 1rem; }
+        .card-fields { margin-left: 20px; margin-top: 5px; }
+        input, textarea { width: 100%; padding: 8px; margin: 6px 0; border-radius: 30px; border: 1px solid #f0c0d0; }
+        footer {
+            background: #2c1a2e;
+            color: #f0d0e0;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 40px 40px 0 0;
+            margin-top: 2rem;
+        }
+        .profile-block, .auth-block, .favorites-block { background: white; border-radius: 32px; padding: 1.5rem; margin-top: 1rem; }
+        .order-item { border-bottom: 1px solid #f0c0d0; padding: 0.8rem 0; }
+        .back-home { background: #e8d9f0; color: #7b1fa2; padding: 5px 15px; border-radius: 40px; border: none; cursor: pointer; margin-top: 15px; }
+        .news-block { background: white; border-radius: 32px; padding: 1.5rem; margin-top: 2rem; }
+        .news-block ul { margin-left: 1.5rem; margin-top: 0.5rem; }
+        .developer-card {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 48px;
+            box-shadow: 0 25px 50px -12px rgba(156, 39, 176, 0.25);
+            overflow: hidden;
+            margin: 0 auto;
+        }
+        .card-header {
+            background: linear-gradient(120deg, #f8bbd0, #e1bee7, #f8bbd0);
+            padding: 35px 20px 25px;
+            text-align: center;
+            position: relative;
+        }
+        .card-header::before { content: "🌸"; position: absolute; top: 15px; left: 25px; font-size: 28px; opacity: 0.7; }
+        .card-header::after { content: "💄"; position: absolute; top: 15px; right: 25px; font-size: 28px; opacity: 0.7; }
+        .title { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 600; color: #4a154b; }
+        .subtitle { font-size: 14px; color: #6d3b6e; background: rgba(255,255,255,0.5); display: inline-block; padding: 4px 16px; border-radius: 30px; }
+        .info-table { width: 100%; border-collapse: separate; border-spacing: 0 16px; padding: 30px; }
+        .info-table td { padding: 14px 20px; border-radius: 24px; background: #fffbfe; box-shadow: 0 2px 8px rgba(156,39,176,0.08); }
+        .info-table td:first-child { font-weight: 700; color: #9c27b0; width: 42%; background: linear-gradient(135deg, #fdf2f8, #fff5fd); }
+        .photo-frame { width: 140px; height: 140px; border-radius: 50%; background: linear-gradient(145deg, #f8bbd0, #e1bee7); padding: 4px; margin: 0 auto; }
+        .photo-frame img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid white; }
+        @media (max-width: 700px) {
+            .products-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+            .modal-inner { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-top">
+        <div class="logo" id="homeLink"><i class="fas fa-spa"></i> Beauty&Cosmetic</div>
+        <div class="search-box"><input type="text" id="searchInput" placeholder="Поиск..."><button id="searchBtn"><i class="fas fa-search"></i></button></div>
+        <div class="nav-icons">
+            <a id="favIcon"><i class="far fa-heart"></i><span id="favBadge" class="badge" style="display:none;">0</span></a>
+            <a id="profileIcon"><i class="far fa-user"></i></a>
+            <a id="cartIcon"><i class="fas fa-shopping-bag"></i><span id="cartBadge" class="badge">0</span></a>
+        </div>
+    </div>
+    <div class="bottom-menu">
+        <span id="saleLink">🔥 Акции</span>
+        <span id="allProductsLink">📦 Все товары</span>
+        <div class="dropdown"><button class="dropbtn">📂 Каталог</button>
+            <div class="dropdown-content">
+                <div data-cat="lipstick">💄 Помады</div><div data-cat="eyeshadow">👁️ Тени</div>
+                <div data-cat="face">🧴 Кремы</div><div data-cat="hair">💇 Шампуни</div><div data-cat="serum">💧 Сыворотки</div>
+            </div>
+        </div>
+        <span id="openFavSpan">❤️ Избранное</span>
+        <span id="aboutLink">🌸 О магазине</span>
+    </div>
+</header>
+
+<main class="container" id="mainContainer"></main>
+<footer><div>📞 +375 (29) 777-88-99 | ✉️ shop@beautycosmetic.by</div><div class="social"><i class="fab fa-instagram"></i> <i class="fab fa-telegram"></i></div><div>© 2026 Beauty&Cosmetic</div></footer>
+
+<div id="productModal" class="modal">
+    <span class="close-modal" onclick="closeModal()">&times;</span>
+    <div class="modal-content">
+        <div class="modal-inner" id="modalInner"></div>
+    </div>
+</div>
+
+<script>
+    const imageBase = "D:/практика 2/пз2/картинки/";
+    function imgPath(cat, idx) { return `${imageBase}${cat}${idx}.jpg`; }
+    
+    // ВСЕ ТОВАРЫ (25 штук) — с обновлёнными названиями и брендами
+    let products = [
+        // Помады (5)
+        { id:1, name:"Помада Розовая", brand:"SEVEN7EEN", price:32.9, oldPrice:45, rating:4.8, category:"lipstick", desc:"Стойкая матовая помада с насыщенным цветом.", image: imgPath("помада",1), composition:"Масло ши, витамин Е", volume:"4.2g" },
+        { id:2, name:"Помада Нюд", brand:"Divage", price:35, oldPrice:48, rating:4.7, category:"lipstick", desc:"Естественный оттенок, сатиновая текстура.", image: imgPath("помада",2), composition:"Масло жожоба", volume:"3.8g" },
+        { id:3, name:"Помада Вишня", brand:"Belot Design", price:38, oldPrice:52, rating:4.9, category:"lipstick", desc:"Насыщенный вишнёвый оттенок", image: imgPath("помада",3), composition:"Керамиды", volume:"4g" },
+        { id:4, name:"Помада Розовая", brand:"Luxvisage", price:29, oldPrice:40, rating:4.6, category:"lipstick", desc:"Нежная розовая помада", image: imgPath("помада",4), composition:"Алоэ вера", volume:"3.5g" },
+        { id:5, name:"Помада Коралл", brand:"Pariswa", price:31, oldPrice:43, rating:4.5, category:"lipstick", desc:"Яркий коралловый оттенок", image: imgPath("помада",5), composition:"Масло кокоса", volume:"4g" },
+        // Тени (5)
+        { id:6, name:"Тени Золотые", brand:"Sislay", price:41.2, oldPrice:55, rating:4.6, category:"eyeshadow", desc:"Золотистые тени с шиммером", image: imgPath("тени",1), composition:"Минеральные пигменты", volume:"1.5g" },
+        { id:7, name:"Тени Розовые", brand:"Limoni", price:39, oldPrice:50, rating:4.5, category:"eyeshadow", desc:"Нежные розовые тени", image: imgPath("тени",2), composition:"Шиммер", volume:"1.5g" },
+        { id:8, name:"Тени Фиолетовые", brand:"Jewellery", price:37, oldPrice:48, rating:4.7, category:"eyeshadow", desc:"Фиолетовые тени с матовой текстурой", image: imgPath("тени",3), composition:"Матовая текстура", volume:"1.5g" },
+        { id:9, name:"Тени Коричневые", brand:"Elian", price:42, oldPrice:56, rating:4.8, category:"eyeshadow", desc:"Натуральные коричневые оттенки", image: imgPath("тени",4), composition:"Натуральные оттенки", volume:"1.5g" },
+        { id:10, name:"Тени Белые", brand:"MAC", price:44, oldPrice:58, rating:4.9, category:"eyeshadow", desc:"Белые тени с перламутром", image: imgPath("тени",5), composition:"Стойкая формула", volume:"1.5g" },
+        // Кремы (5)
+        { id:11, name:"Крем BB", brand:"Loreal", price:45.5, oldPrice:59, rating:4.9, category:"face", desc:"BB-крем с тонирующим эффектом", image: imgPath("крем",1), composition:"Гиалуроновая кислота", volume:"50ml" },
+        { id:12, name:"Крем Питательный", brand:"Nivea", price:38, oldPrice:50, rating:4.7, category:"face", desc:"Питательный крем для лица", image: imgPath("крем",2), composition:"Масло ши", volume:"50ml" },
+        { id:13, name:"Крем Антивозрастной", brand:"Vichy", price:55, oldPrice:70, rating:4.8, category:"face", desc:"Антивозрастной уход", image: imgPath("крем",3), composition:"Ретинол", volume:"50ml" },
+        { id:14, name:"Крем Дневной", brand:"Garnier", price:32, oldPrice:42, rating:4.5, category:"face", desc:"Дневной крем с SPF", image: imgPath("крем",4), composition:"SPF 15", volume:"50ml" },
+        { id:15, name:"Крем Ночной", brand:"Loreal", price:48, oldPrice:62, rating:4.6, category:"face", desc:"Ночной восстанавливающий крем", image: imgPath("крем",5), composition:"Пептиды", volume:"50ml" },
+        // Шампуни (5)
+        { id:16, name:"Шампунь Восстанавливающий", brand:"Kerastase", price:38, oldPrice:49, rating:4.7, category:"hair", desc:"Восстанавливает повреждённые волосы", image: imgPath("шампунь",1), composition:"Кератин", volume:"250ml" },
+        { id:17, name:"Шампунь Объем", brand:"Loreal", price:28, oldPrice:36, rating:4.5, category:"hair", desc:"Придаёт объём", image: imgPath("шампунь",2), composition:"Провитамин B5", volume:"250ml" },
+        { id:18, name:"Шампунь Увлажняющий", brand:"Nivea", price:25, oldPrice:33, rating:4.4, category:"hair", desc:"Увлажняет волосы", image: imgPath("шампунь",3), composition:"Алоэ вера", volume:"250ml" },
+        { id:19, name:"Шампунь Блеск", brand:"Wella", price:30, oldPrice:40, rating:4.6, category:"hair", desc:"Придаёт блеск волосам", image: imgPath("шампунь",4), composition:"Шелк", volume:"250ml" },
+        { id:20, name:"Шампунь Сила", brand:"Vichy", price:42, oldPrice:55, rating:4.7, category:"hair", desc:"Укрепляет волосы", image: imgPath("шампунь",5), composition:"Аминексил", volume:"250ml" },
+        // Сыворотки (5)
+        { id:21, name:"Сыворотка Коллаген", brand:"GLOW", price:47.6, oldPrice:66.3, rating:4.9, category:"serum", desc:"Коллагеновая сыворотка", image: imgPath("сыворотка",1), composition:"Коллаген", volume:"30ml" },
+        { id:22, name:"Сыворотка Омоложение", brand:"Art&Fact", price:42, oldPrice:58, rating:4.8, category:"serum", desc:"Омолаживающая сыворотка", image: imgPath("сыворотка",2), composition:"Гиалуроновая кислота", volume:"30ml" },
+        { id:23, name:"Сыворотка Витамин C", brand:"Vichy", price:39, oldPrice:52, rating:4.7, category:"serum", desc:"Витаминная сыворотка", image: imgPath("сыворотка",3), composition:"Витамин C", volume:"30ml" },
+        { id:24, name:"Сыворотка Ретинол", brand:"Mixit", price:35, oldPrice:48, rating:4.6, category:"serum", desc:"Ретиноловая сыворотка", image: imgPath("сыворотка",4), composition:"Ретинол", volume:"30ml" },
+        { id:25, name:"Сыворотка Успокаивающая", brand:"Likato", price:44, oldPrice:60, rating:4.8, category:"serum", desc:"Успокаивает чувствительную кожу", image: imgPath("сыворотка",5), composition:"Пантенол", volume:"30ml" }
+    ];
+
+    let cart = JSON.parse(localStorage.getItem('beautyCart')||'[]');
+    let favorites = JSON.parse(localStorage.getItem('beautyFav')||'[]');
+    let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+    let appliedPromo = false;
+
+    function saveCart() { localStorage.setItem('beautyCart',JSON.stringify(cart)); updateBadges(); }
+    function saveFav() { localStorage.setItem('beautyFav',JSON.stringify(favorites)); updateBadges(); }
+    function updateBadges() {
+        document.getElementById('cartBadge').innerText = cart.reduce((s,i)=>s+i.qty,0);
+        let fb = document.getElementById('favBadge');
+        if(favorites.length>0) { fb.innerText=favorites.length; fb.style.display='flex'; } else fb.style.display='none';
+    }
+    
+    function addToCart(id, qty = 1, btnElement = null) {
+        let p = products.find(x => x.id == id);
+        let existing = cart.find(x => x.id == id);
+        if (existing) existing.qty += qty;
+        else cart.push({ id: p.id, name: p.name, price: p.price, qty, image: p.image });
+        saveCart();
+        if (btnElement) {
+            const originalText = btnElement.innerText;
+            btnElement.innerText = '✓ Добавлено';
+            setTimeout(() => { btnElement.innerText = originalText; }, 1000);
+        }
+    }
+    
+    function removeFromCart(id) { cart = cart.filter(i=>i.id!==id); saveCart(); renderCart(); }
+    function toggleFav(id) {
+        if(favorites.includes(id)) favorites = favorites.filter(f=>f!==id);
+        else favorites.push(id);
+        saveFav();
+        renderCurrentPage();
+    }
+    function isLoggedIn() { return currentUser !== null; }
+    
+    function renderCurrentPage() {
+        let html = document.getElementById('mainContainer').innerHTML;
+        if(html.includes('ТОП товаров')) renderHome();
+        else if(html.includes('Каталог')) renderCatalogFromHTML(html);
+        else if(html.includes('Корзина')) renderCart();
+        else if(html.includes('Оформление')) renderCheckout();
+        else if(html.includes('Профиль')) renderProfile();
+        else if(html.includes('Авторизация')) renderAuth();
+        else if(html.includes('Избранное')) renderFavorites();
+        else if(html.includes('Акции')) renderSale();
+        else renderHome();
+    }
+    
+    function renderCatalogFromHTML(html) {
+        if(html.includes('Помады')) renderCatalog('lipstick');
+        else if(html.includes('Тени')) renderCatalog('eyeshadow');
+        else if(html.includes('Кремы')) renderCatalog('face');
+        else if(html.includes('Шампуни')) renderCatalog('hair');
+        else if(html.includes('Сыворотки')) renderCatalog('serum');
+        else renderCatalog('lipstick');
+    }
+    
+    let timerInterval;
+    function startTimer() {
+        let end = new Date(); end.setHours(end.getHours()+24);
+        function update(){
+            let diff = end - new Date();
+            if(diff<=0){ if(document.getElementById('timerDisc')) document.getElementById('timerDisc').innerHTML="🔥 Акция завершена!"; clearInterval(timerInterval); return; }
+            let h=Math.floor(diff/3600000), m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
+            if(document.getElementById('timerDisc')) document.getElementById('timerDisc').innerHTML=`⏰ Скидка на ТОП товары закончится через: ${h}ч ${m}м ${s}с`;
+        }
+        update(); if(timerInterval) clearInterval(timerInterval); timerInterval = setInterval(update,1000);
+    }
+    
+    // ТОП товаров — по одному из каждой категории
+    function renderHome() {
+        let topProducts = products.filter(p => p.id === 1 || p.id === 6 || p.id === 11 || p.id === 16 || p.id === 21);
+        let html = `<div class="hero"><h1> Beauty&Cosmetic </h1><p>Оригинальная косметика, доставка 1 день</p></div>`;
+        html += `<div class="timer" id="timerDisc"></div>`;
+        html += `<h2 class="section-title">🔥 ТОП товаров </h2><div class="products-grid">`;
+        topProducts.forEach(p => {
+            let isFav = favorites.includes(p.id);
+            html += `<div class="product-card" onclick="showProductModal(${p.id})">
+                        <img class="product-img" src="${p.image}" onerror="this.src='https://placehold.co/400x180/fce4ec/9c27b0?text=${p.name[0]}'">
+                        <strong>${p.name}</strong>
+                        <div class="price-block">${p.price} BYN ${p.oldPrice ? `<span class="old-price">${p.oldPrice} BYN</span>` : ''}</div>
+                        <button class="small-btn" onclick="event.stopPropagation(); addToCart(${p.id}, 1, this)">В корзину</button>
+                        <button class="small-btn" onclick="event.stopPropagation(); toggleFav(${p.id})" style="background:${isFav?'#e91e63':'#9c27b0'}">❤️</button>
+                    </div>`;
+        });
+        html += `</div><div class="news-block"><h3>📰 НОВОСТИ</h3>
+                    <ul><li>🌸 Коллагеновая сыворотка GLOW — скидка 20%</li><li>💄 Бесплатная доставка от 55 BYN</li></ul>
+                 </div><button class="back-home" onclick="renderHome()">Обновить</button>`;
+        document.getElementById('mainContainer').innerHTML = html;
+        startTimer();
+    }
+    
+    // ОТКРЫТИЕ КАРТОЧКИ ТОВАРА
+    window.showProductModal = (id) => {
+        let p = products.find(x => x.id === id);
+        let stars = '★'.repeat(Math.floor(p.rating)) + '☆'.repeat(5 - Math.floor(p.rating));
+        let modalHtml = `
+            <div class="modal-image">
+                <img src="${p.image}" onerror="this.src='https://placehold.co/400x400/fce4ec/9c27b0?text=${p.name[0]}'">
+            </div>
+            <div class="modal-details">
+                <h2>${p.name}</h2>
+                <div class="brand">${p.brand}</div>
+                <div class="rating">${stars} (${p.rating})</div>
+                <div class="price-large">${p.price} BYN <span class="old-price">${p.oldPrice} BYN</span></div>
+                <p>${p.desc}</p>
+                <div class="specs-block">
+                    <p><strong>🧴 Состав:</strong> ${p.composition || "Масло ши, витамин Е"}</p>
+                    <p><strong>📦 Объём:</strong> ${p.volume || "4 г"}</p>
+                    <p><strong>🏷️ Артикул:</strong> BC-${p.id}00${p.id}</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px; margin: 20px 0;">
+                    <label><strong>Количество:</strong></label>
+                    <input type="number" id="modalQty" value="1" min="1" style="width: 70px; padding: 8px; text-align: center;">
+                </div>
+                <button class="btn-primary" id="modalAddBtn" data-id="${p.id}">Добавить в корзину</button>
+            </div>
+        `;
+        document.getElementById('modalInner').innerHTML = modalHtml;
+        document.getElementById('productModal').style.display = 'flex';
+        document.getElementById('modalAddBtn')?.addEventListener('click', function() {
+            let qty = parseInt(document.getElementById('modalQty')?.value || 1);
+            addToCart(p.id, qty, this);
+            setTimeout(() => closeModal(), 800);
+        });
+    };
+    window.closeModal = () => document.getElementById('productModal').style.display = 'none';
+    
+    function renderSale() {
+        let saleProducts = products.filter(p => p.oldPrice > p.price);
+        let html = `<div class="hero"><h1>🔥 Акции и скидки 🔥</h1><p>Успей купить со скидкой!</p></div><div class="products-grid">`;
+        saleProducts.forEach(p => {
+            let isFav = favorites.includes(p.id);
+            html += `<div class="product-card" onclick="showProductModal(${p.id})">
+                        <img class="product-img" src="${p.image}" onerror="this.src='https://placehold.co/400x180/fce4ec/9c27b0?text=${p.name[0]}'">
+                        <strong>${p.name}</strong>
+                        <div class="price-block">${p.price} BYN <span class="old-price">${p.oldPrice} BYN</span></div>
+                        <button class="small-btn" onclick="event.stopPropagation(); addToCart(${p.id}, 1, this)">В корзину</button>
+                        <button class="small-btn" onclick="event.stopPropagation(); toggleFav(${p.id})" style="background:${isFav?'#e91e63':'#9c27b0'}">❤️</button>
+                    </div>`;
+        });
+        html += `</div><button class="back-home" onclick="renderHome()">На главную</button>`;
+        document.getElementById('mainContainer').innerHTML = html;
+    }
+    
+    function renderAllProducts() {
+        let html = `<h2 class="section-title">📦 Все товары (${products.length})</h2><div class="products-grid">`;
+        products.forEach(p => {
+            let isFav = favorites.includes(p.id);
+            html += `<div class="product-card" onclick="showProductModal(${p.id})">
+                        <img class="product-img" src="${p.image}" onerror="this.src='https://placehold.co/400x180/fce4ec/9c27b0?text=${p.name[0]}'">
+                        <strong>${p.name}</strong>
+                        <div class="price-block">${p.price} BYN</div>
+                        <button class="small-btn" onclick="event.stopPropagation(); addToCart(${p.id}, 1, this)">В корзину</button>
+                        <button class="small-btn" onclick="event.stopPropagation(); toggleFav(${p.id})" style="background:${isFav?'#e91e63':'#9c27b0'}">❤️</button>
+                    </div>`;
+        });
+        html += `</div><button class="back-home" onclick="renderHome()">На главную</button>`;
+        document.getElementById('mainContainer').innerHTML = html;
+    }
+    
+    function renderCatalog(category) {
+        let filtered = products.filter(p => p.category === category);
+        let catName = {lipstick:"Помады", eyeshadow:"Тени", face:"Кремы", hair:"Шампуни", serum:"Сыворотки"}[category];
+        let html = `<h2 class="section-title">📖 Каталог: ${catName}</h2><div class="products-grid">`;
+        filtered.forEach(p => {
+            let isFav = favorites.includes(p.id);
+            html += `<div class="product-card" onclick="showProductModal(${p.id})">
+                        <img class="product-img" src="${p.image}" onerror="this.src='https://placehold.co/400x180/fce4ec/9c27b0?text=${p.name[0]}'">
+                        <strong>${p.name}</strong>
+                        <div class="price-block">${p.price} BYN</div>
+                        <button class="small-btn" onclick="event.stopPropagation(); addToCart(${p.id}, 1, this)">В корзину</button>
+                        <button class="small-btn" onclick="event.stopPropagation(); toggleFav(${p.id})" style="background:${isFav?'#e91e63':'#9c27b0'}">❤️</button>
+                    </div>`;
+        });
+        html += `</div><button class="back-home" onclick="renderHome()">На главную</button>`;
+        document.getElementById('mainContainer').innerHTML = html;
+    }
+    
+    function renderFavorites() {
+        let favs = products.filter(p => favorites.includes(p.id));
+        if(favs.length===0) { document.getElementById('mainContainer').innerHTML = `<div class="favorites-block"><h3>❤️ Избранное пусто</h3><button class="back-home" onclick="renderHome()">На главную</button></div>`; return; }
+        let html = `<h2 class="section-title">❤️ Избранное</h2><div class="products-grid">`+favs.map(p=>`<div class="product-card" onclick="showProductModal(${p.id})">
+                        <img class="product-img" src="${p.image}" onerror="this.src='https://placehold.co/400x180/fce4ec/9c27b0?text=${p.name[0]}'">
+                        <strong>${p.name}</strong>
+                        <div class="price-block">${p.price} BYN</div>
+                        <button class="small-btn" onclick="event.stopPropagation(); addToCart(${p.id}, 1, this)">В корзину</button>
+                        <button class="small-btn" onclick="event.stopPropagation(); toggleFav(${p.id})">❤️ Удалить</button>
+                    </div>`).join('')+`</div><button class="back-home" onclick="renderHome()">На главную</button>`;
+        document.getElementById('mainContainer').innerHTML = html;
+    }
+    
+    function renderCart() {
+        if(cart.length===0){ document.getElementById('mainContainer').innerHTML = `<div class="profile-block"><h3>Корзина пуста</h3><button class="btn-primary" onclick="renderHome()">На главную</button></div>`; return; }
+        let total = cart.reduce((s,i)=>s + i.price*i.qty,0);
+        let promoDiscount = (appliedPromo ? 50 : 0);
+        let finalTotal = Math.max(0, total - promoDiscount);
+        let items = cart.map(i => `<div style="display:flex; gap:10px; align-items:center; margin:10px 0;"><img src="${i.image}" style="width:50px; height:50px; object-fit:cover;"> <span style="flex:1;">${i.name} x${i.qty}</span> <span>${(i.price*i.qty).toFixed(2)} BYN</span> <button class="small-btn" onclick="removeFromCart(${i.id})">🗑️</button></div>`).join('');
+        let html = `<div><h2>Корзина</h2>${items}<hr>
+                    <div><strong>Товары:</strong> ${total.toFixed(2)} BYN</div>
+                    ${appliedPromo ? `<div><strong style="color:green;">Промокод ВЕРА: -50 BYN</strong></div>` : `<div><input type="text" id="promoCode" placeholder="Промокод ВЕРА"><button class="small-btn" onclick="applyPromo()">Применить</button></div>`}
+                    <div><strong>Итого: ${finalTotal.toFixed(2)} BYN</strong></div><br>
+                    ${isLoggedIn() ? `<button class="btn-primary" onclick="renderCheckout()">Оформить заказ</button>` : `<button class="btn-primary" onclick="renderAuth()">Войдите для оформления</button>`}
+                    <button class="back-home" onclick="renderHome()">На главную</button></div>`;
+        document.getElementById('mainContainer').innerHTML = html;
+    }
+    
+    window.applyPromo = () => {
+        let code = document.getElementById('promoCode')?.value.trim().toUpperCase();
+        if(code === "ВЕРА") { appliedPromo = true; renderCart(); }
+        else alert("Неверный код");
+    };
+    
+    function renderCheckout() {
+        if(!isLoggedIn()) { renderAuth(); return; }
+        let total = cart.reduce((s,i)=>s + i.price*i.qty,0);
+        let promoDiscount = appliedPromo ? 50 : 0;
+        let finalTotal = Math.max(0, total - promoDiscount);
+        let cartHtml = `<div><h4>Ваш заказ</h4>${cart.map(i=>`<div>${i.name} x${i.qty} — ${(i.price*i.qty).toFixed(2)} BYN</div>`).join('')}<hr>Сумма: ${total.toFixed(2)} BYN<br>${appliedPromo ? "Скидка: -50 BYN<br>" : ""}<strong id="checkoutTotal">Итого: ${finalTotal.toFixed(2)} BYN</strong></div>`;
+        let html = `<h2>Оформление заказа</h2><div class="order-grid"><div class="order-details">
+                    <input id="lastname" placeholder="Фамилия и имя*"><br><input id="phone" placeholder="Телефон*"><br><input id="email" placeholder="Email*"><br><input id="address" placeholder="Адрес*"><br><textarea rows="2" placeholder="Комментарий"></textarea><br>
+                    <div class="radio-group"><strong>Доставка:</strong><br><label><input type="radio" name="delivery" value="0" checked> Курьерская (бесплатно от 55 BYN)</label><br>
+                    <label><input type="radio" name="delivery" value="0"> Самовывоз</label><br><label><input type="radio" name="delivery" value="5"> Почтовая (5 BYN)</label></div>
+                    <div class="radio-group"><strong>Оплата:</strong><br><label><input type="radio" name="payment" value="card" id="payCardRadio" checked> Банковской картой</label>
+                    <div id="cardFields" class="card-fields"><input placeholder="Номер карты"><input placeholder="MM/YY"><input placeholder="CVV"></div>
+                    <label><input type="radio" name="payment" value="cash"> Наличными</label></div>
+                    </div><div class="order-summary">${cartHtml}<button class="btn-primary" style="width:100%; margin-top:1rem;" onclick="finalOrder()">Оформить</button></div></div><button class="back-home" onclick="renderCart()">Назад</button>`;
+        document.getElementById('mainContainer').innerHTML = html;
+        let cardRadio = document.getElementById('payCardRadio');
+        let cardDiv = document.getElementById('cardFields');
+        if(cardRadio && cardDiv) cardRadio.addEventListener('change',()=> cardDiv.style.display = cardRadio.checked ? 'block' : 'none');
+        document.querySelector('input[name="payment"][value="cash"]')?.addEventListener('change',()=> cardDiv.style.display = 'none');
+        document.querySelectorAll('input[name="delivery"]').forEach(r => r.addEventListener('change', () => {
+            let del = parseFloat(document.querySelector('input[name="delivery"]:checked')?.value||0);
+            let newTotal = finalTotal + del;
+            document.getElementById('checkoutTotal').innerHTML = `Итого: ${newTotal.toFixed(2)} BYN`;
+        }));
+    }
+    
+    window.finalOrder = function(){
+        let name = document.getElementById('lastname')?.value;
+        if(!name) { alert("Введите имя"); return; }
+        let total = cart.reduce((s,i)=>s + i.price*i.qty,0);
+        let discount = appliedPromo ? 50 : 0;
+        let order = { date: new Date().toLocaleString(), items: cart.map(i=>i.name).join(', '), total: total - discount };
+        currentUser.orders = currentUser.orders || [];
+        currentUser.orders.unshift(order);
+        localStorage.setItem('currentUser',JSON.stringify(currentUser));
+        let users = JSON.parse(localStorage.getItem('users')||'{}');
+        if(users[currentUser.username]) users[currentUser.username].orders = currentUser.orders;
+        localStorage.setItem('users', JSON.stringify(users));
+        alert("Заказ оформлен!");
+        cart = []; appliedPromo = false; saveCart();
+        renderProfile();
+    };
+    
+    function renderProfile() {
+        if(!isLoggedIn()){ renderAuth(); return; }
+        let html = `<div class="profile-block"><h2>${currentUser.fullName}</h2><button class="btn-primary" onclick="logout()">Выйти</button>
+                    <h3>Мои заказы</h3>`;
+        if(!currentUser.orders || currentUser.orders.length===0) html += `<p>Заказов пока нет</p>`;
+        else html += currentUser.orders.map(o=>`<div class="order-item"><strong>${o.date}</strong><br>${o.items}<br>${o.total} BYN</div>`).join('');
+        html += `<button class="back-home" onclick="renderHome()">На главную</button></div>`;
+        document.getElementById('mainContainer').innerHTML = html;
+    }
+    
+    function renderAuth() {
+        let html = `<div class="auth-block"><h2>Вход</h2><input id="loginUser" placeholder="Имя пользователя"><br><input id="loginPass" type="password" placeholder="Пароль"><br>
+                    <button class="btn-primary" onclick="doLogin()">Войти</button><hr><h3>Регистрация</h3>
+                    <input id="regFull" placeholder="ФИО"><br><input id="regUser" placeholder="Имя пользователя"><br>
+                    <input id="regEmail" placeholder="Email"><br><input id="regPhone" placeholder="Телефон"><br><input id="regPass" type="password" placeholder="Пароль"><br>
+                    <button class="btn-primary" onclick="doRegister()">Зарегистрироваться</button><button class="back-home" onclick="renderHome()">На главную</button></div>`;
+        document.getElementById('mainContainer').innerHTML = html;
+    }
+    window.doLogin = () => {
+        let user = document.getElementById('loginUser')?.value, pass = document.getElementById('loginPass')?.value;
+        let users = JSON.parse(localStorage.getItem('users')||'{}');
+        if(users[user] && users[user].password === pass) { currentUser = users[user]; localStorage.setItem('currentUser',JSON.stringify(currentUser)); alert("Добро пожаловать!"); renderProfile(); }
+        else alert("Неверно");
+    };
+    window.doRegister = () => {
+        let full = document.getElementById('regFull')?.value, user = document.getElementById('regUser')?.value;
+        let email = document.getElementById('regEmail')?.value, phone = document.getElementById('regPhone')?.value, pass = document.getElementById('regPass')?.value;
+        if(!full || !user || !pass) { alert("Заполните ФИО, логин и пароль"); return; }
+        let users = JSON.parse(localStorage.getItem('users')||'{}');
+        if(users[user]) { alert("Такой логин уже есть"); return; }
+        let newUser = { fullName: full, username: user, email, phone, password: pass, orders: [] };
+        users[user] = newUser; localStorage.setItem('users', JSON.stringify(users));
+        currentUser = newUser; localStorage.setItem('currentUser',JSON.stringify(currentUser));
+        alert("Регистрация успешна!"); renderProfile();
+    };
+    window.logout = () => { currentUser = null; localStorage.removeItem('currentUser'); appliedPromo = false; renderHome(); };
+    
+    function renderAbout() {
+    let aboutHtml = `
+    <div class="developer-card" style="max-width: 800px; width: 100%; background: rgba(255, 255, 255, 0.98); border-radius: 48px; box-shadow: 0 25px 50px -12px rgba(156, 39, 176, 0.25); overflow: hidden; margin: 0 auto;">
+        <div class="card-header" style="background: linear-gradient(120deg, #f8bbd0, #e1bee7, #f8bbd0); padding: 35px 20px 25px; text-align: center; position: relative;">
+            <div style="position: absolute; top: 15px; left: 25px; font-size: 28px; opacity: 0.7;">🌸</div>
+            <div style="position: absolute; top: 15px; right: 25px; font-size: 28px; opacity: 0.7;">💄</div>
+            <h1 class="title" style="font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 600; color: #4a154b; letter-spacing: 1px; margin-bottom: 8px;">✨ Карточка разработчика ✨</h1>
+            <div class="subtitle" style="font-size: 14px; color: #6d3b6e; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; background: rgba(255,255,255,0.5); display: inline-block; padding: 4px 16px; border-radius: 30px;">Beauty&Cosmetic</div>
+        </div>
+        <div class="card-body" style="padding: 30px 35px 35px;">
+            <table class="info-table" style="width: 100%; border-collapse: separate; border-spacing: 0 16px;">
+                <tr>
+                    <td style="padding: 14px 20px; vertical-align: top; border-radius: 24px; background-color: #fffbfe; box-shadow: 0 2px 8px rgba(156,39,176,0.08); font-weight: 700; color: #9c27b0; width: 42%; background: linear-gradient(135deg, #fdf2f8, #fff5fd);">📘 Код специальности, специальность</td>
+                    <td style="padding: 14px 20px; vertical-align: top; border-radius: 24px; background-color: #fffbfe; box-shadow: 0 2px 8px rgba(156,39,176,0.08); color: #3c2a3e; font-weight: 500; background-color: #ffffff;"><strong>5-04-0612-02</strong><br>«Разработка и сопровождение программного обеспечения информационных технологий»</td>
+                </tr>
+                <tr>
+                    <td style="padding: 14px 20px; vertical-align: top; border-radius: 24px; background-color: #fffbfe; box-shadow: 0 2px 8px rgba(156,39,176,0.08); font-weight: 700; color: #9c27b0; width: 42%; background: linear-gradient(135deg, #fdf2f8, #fff5fd);">🆔 Код разработчика</td>
+                    <td style="padding: 14px 20px; vertical-align: top; border-radius: 24px; background-color: #fffbfe; box-shadow: 0 2px 8px rgba(156,39,176,0.08); color: #3c2a3e; font-weight: 500; background-color: #ffffff;"><strong>26</strong></td>
+                </tr>
+                <tr>
+                    <td style="padding: 14px 20px; vertical-align: top; border-radius: 24px; background-color: #fffbfe; box-shadow: 0 2px 8px rgba(156,39,176,0.08); font-weight: 700; color: #9c27b0; width: 42%; background: linear-gradient(135deg, #fdf2f8, #fff5fd);">👩‍💻 Фамилия, имя, отчество</td>
+                    <td style="padding: 14px 20px; vertical-align: top; border-radius: 24px; background-color: #fffbfe; box-shadow: 0 2px 8px rgba(156,39,176,0.08); color: #3c2a3e; font-weight: 500; background-color: #ffffff;"><strong>Спичёнок Полина Сергеевна</strong></td>
+                </tr>
+                <tr>
+                    <td style="padding: 14px 20px; vertical-align: top; border-radius: 24px; background-color: #fffbfe; box-shadow: 0 2px 8px rgba(156,39,176,0.08); font-weight: 700; color: #9c27b0; width: 42%; background: linear-gradient(135deg, #fdf2f8, #fff5fd);">📸 Фото</td>
+                    <td style="padding: 14px 20px; vertical-align: top; border-radius: 24px; background-color: #fffbfe; box-shadow: 0 2px 8px rgba(156,39,176,0.08); color: #3c2a3e; font-weight: 500; background-color: #ffffff;">
+                        <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                            <div style="width: 140px; height: 140px; border-radius: 50%; background: linear-gradient(145deg, #f8bbd0, #e1bee7); padding: 4px; box-shadow: 0 8px 20px rgba(156, 39, 176, 0.25);">
+                                <img src="разработчик.jpg" alt="Фото разработчика" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid white; background-color: #fdf2f8;" onerror="this.src='https://placehold.co/140x140/fce4ec/9c27b0?text=🌸'">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 14px 20px; vertical-align: top; border-radius: 24px; background-color: #fffbfe; box-shadow: 0 2px 8px rgba(156,39,176,0.08); font-weight: 700; color: #9c27b0; width: 42%; background: linear-gradient(135deg, #fdf2f8, #fff5fd);">🛍️ Тема сайта</td>
+                    <td style="padding: 14px 20px; vertical-align: top; border-radius: 24px; background-color: #fffbfe; box-shadow: 0 2px 8px rgba(156,39,176,0.08); color: #3c2a3e; font-weight: 500; background-color: #ffffff;"><strong>Интернет-магазин косметики «Beauty&Cosmetic»</strong></td>
+                </tr>
+                <tr>
+                    <td style="padding: 14px 20px; vertical-align: top; border-radius: 24px; background-color: #fffbfe; box-shadow: 0 2px 8px rgba(156,39,176,0.08); font-weight: 700; color: #9c27b0; width: 42%; background: linear-gradient(135deg, #fdf2f8, #fff5fd);">📅 Дата создания</td>
+                    <td style="padding: 14px 20px; vertical-align: top; border-radius: 24px; background-color: #fffbfe; box-shadow: 0 2px 8px rgba(156,39,176,0.08); color: #3c2a3e; font-weight: 500; background-color: #ffffff;"><span style="background: #f3e5f5; padding: 5px 15px; border-radius: 40px;">📆 04.05.2026</span></td>
+                </tr>
+            </table>
+        </div>
+        <div style="text-align: center; padding: 20px;">
+            <button class="back-home" onclick="renderHome()" style="background: #e8d9f0; color: #7b1fa2; padding: 8px 22px; border-radius: 40px; border: none; font-weight: bold; cursor: pointer;">🏠 Вернуться на главную</button>
+        </div>
+    </div>`;
+    document.getElementById('mainContainer').innerHTML = aboutHtml;
+}
+    
+    document.getElementById('homeLink')?.addEventListener('click', ()=>renderHome());
+    document.getElementById('aboutLink')?.addEventListener('click', ()=>renderAbout());
+    document.getElementById('cartIcon')?.addEventListener('click', ()=>renderCart());
+    document.getElementById('profileIcon')?.addEventListener('click', ()=>isLoggedIn()?renderProfile():renderAuth());
+    document.getElementById('favIcon')?.addEventListener('click', ()=>renderFavorites());
+    document.getElementById('openFavSpan')?.addEventListener('click', ()=>renderFavorites());
+    document.getElementById('saleLink')?.addEventListener('click', ()=>renderSale());
+    document.getElementById('allProductsLink')?.addEventListener('click', ()=>renderAllProducts());
+    document.querySelectorAll('.dropdown-content div').forEach(el=>{ el.addEventListener('click', ()=>renderCatalog(el.getAttribute('data-cat'))); });
+    document.getElementById('searchBtn')?.addEventListener('click',()=>{
+        let q = document.getElementById('searchInput').value.toLowerCase();
+        let filtered = products.filter(p=>p.name.toLowerCase().includes(q));
+        let html = `<h2>Поиск: ${q}</h2><div class="products-grid">`+filtered.map(p=>`<div class="product-card" onclick="showProductModal(${p.id})"><img class="product-img" src="${p.image}" onerror="this.src='https://placehold.co/400x180/fce4ec/9c27b0?text=${p.name[0]}'"><strong>${p.name}</strong><div class="price-block">${p.price} BYN</div><button class="small-btn" onclick="addToCart(${p.id}, 1, this)">В корзину</button></div>`).join('')+`</div><button class="back-home" onclick="renderHome()">На главную</button>`;
+        document.getElementById('mainContainer').innerHTML = html;
+    });
+    
+    updateBadges();
+    renderHome();
+</script>
+</body>
+</html>
